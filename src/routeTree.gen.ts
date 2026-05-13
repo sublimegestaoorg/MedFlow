@@ -17,6 +17,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppPacientesRouteImport } from './routes/app/pacientes'
+import { Route as AppOnlineRouteImport } from './routes/app/online'
 import { Route as AppFinanceiroRouteImport } from './routes/app/financeiro'
 import { Route as AppEquipeRouteImport } from './routes/app/equipe'
 import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes'
@@ -63,6 +64,11 @@ const AppPacientesRoute = AppPacientesRouteImport.update({
   path: '/pacientes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOnlineRoute = AppOnlineRouteImport.update({
+  id: '/online',
+  path: '/online',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
   id: '/financeiro',
   path: '/financeiro',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
   '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
   '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
   '/app/financeiro': typeof AppFinanceiroRoute
+  '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/equipe'
     | '/app/financeiro'
+    | '/app/online'
     | '/app/pacientes'
     | '/app/'
     | '/app/pacientes/$id'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/equipe'
     | '/app/financeiro'
+    | '/app/online'
     | '/app/pacientes'
     | '/app'
     | '/app/pacientes/$id'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/equipe'
     | '/app/financeiro'
+    | '/app/online'
     | '/app/pacientes'
     | '/app/'
     | '/app/pacientes/$id'
@@ -248,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPacientesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/online': {
+      id: '/app/online'
+      path: '/online'
+      fullPath: '/app/online'
+      preLoaderRoute: typeof AppOnlineRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/financeiro': {
       id: '/app/financeiro'
       path: '/financeiro'
@@ -303,6 +322,7 @@ interface AppRouteChildren {
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppEquipeRoute: typeof AppEquipeRoute
   AppFinanceiroRoute: typeof AppFinanceiroRoute
+  AppOnlineRoute: typeof AppOnlineRoute
   AppPacientesRoute: typeof AppPacientesRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -312,6 +332,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppEquipeRoute: AppEquipeRoute,
   AppFinanceiroRoute: AppFinanceiroRoute,
+  AppOnlineRoute: AppOnlineRoute,
   AppPacientesRoute: AppPacientesRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
