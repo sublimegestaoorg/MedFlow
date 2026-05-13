@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Search, Plus, Filter, MoreVertical, FileText, Phone, Mail, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { NovoPacienteModal } from "@/components/NovoPacienteModal";
 
 export const Route = createFileRoute("/app/pacientes")({
   component: Pacientes,
@@ -11,6 +12,7 @@ function Pacientes() {
   const navigate = useNavigate();
   const [pacientes, setPacientes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPacientes();
@@ -44,14 +46,22 @@ function Pacientes() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <NovoPacienteModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchPacientes}
+      />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-6 rounded-2xl shadow-sm border border-border">
         <div>
           <h1 className="text-2xl font-bold font-display text-foreground">Pacientes</h1>
           <p className="text-sm text-muted-foreground mt-1">Gerencie cadastros, prontuários e históricos.</p>
         </div>
-        <button className="flex items-center gap-2 bg-brand text-brand-foreground px-5 py-2.5 rounded-xl font-bold hover:bg-brand-accent transition-colors shadow-sm">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 bg-brand text-brand-foreground px-5 py-2.5 rounded-xl font-bold hover:bg-brand-accent transition-colors shadow-sm"
+        >
           <Plus className="size-4" />
           <span>Novo Paciente</span>
         </button>

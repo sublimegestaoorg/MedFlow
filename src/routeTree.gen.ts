@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppPacientesRouteImport } from './routes/app/pacientes'
+import { Route as AppFinanceiroRouteImport } from './routes/app/financeiro'
 import { Route as AppAgendamentosRouteImport } from './routes/app/agendamentos'
 import { Route as AppPacientesIdRouteImport } from './routes/app/pacientes/$id'
 
@@ -42,6 +43,11 @@ const AppPacientesRoute = AppPacientesRouteImport.update({
   path: '/pacientes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAgendamentosRoute = AppAgendamentosRouteImport.update({
   id: '/agendamentos',
   path: '/agendamentos',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
+  '/app/financeiro': typeof AppFinanceiroRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/app/agendamentos'
+    | '/app/financeiro'
     | '/app/pacientes'
     | '/app/'
     | '/app/pacientes/$id'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/app/agendamentos'
+    | '/app/financeiro'
     | '/app/pacientes'
     | '/app'
     | '/app/pacientes/$id'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/app/agendamentos'
+    | '/app/financeiro'
     | '/app/pacientes'
     | '/app/'
     | '/app/pacientes/$id'
@@ -152,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPacientesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/financeiro': {
+      id: '/app/financeiro'
+      path: '/financeiro'
+      fullPath: '/app/financeiro'
+      preLoaderRoute: typeof AppFinanceiroRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/agendamentos': {
       id: '/app/agendamentos'
       path: '/agendamentos'
@@ -183,12 +202,14 @@ const AppPacientesRouteWithChildren = AppPacientesRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAgendamentosRoute: typeof AppAgendamentosRoute
+  AppFinanceiroRoute: typeof AppFinanceiroRoute
   AppPacientesRoute: typeof AppPacientesRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAgendamentosRoute: AppAgendamentosRoute,
+  AppFinanceiroRoute: AppFinanceiroRoute,
   AppPacientesRoute: AppPacientesRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
