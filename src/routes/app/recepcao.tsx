@@ -71,7 +71,7 @@ function RecepcaoPage() {
   }, []);
 
   const updateStatus = async (id: string, status: string) => {
-    const patch: Record<string, unknown> = { status };
+    const patch: { status: string; checked_in_at?: string } = { status };
     if (status === "confirmed") patch.checked_in_at = new Date().toISOString();
     const { error } = await supabase.from("appointments").update(patch).eq("id", id);
     if (error) { toast.error(error.message); return; }
