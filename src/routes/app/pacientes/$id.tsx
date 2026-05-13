@@ -53,7 +53,7 @@ function ProntuarioPaciente() {
       id: note.id,
       date: new Date(note.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }),
       type: note.type === 'evolution' ? 'Evolução' : note.type,
-      prof: note.profiles?.full_name || "Profissional",
+      prof: (Array.isArray(note.profiles) ? note.profiles[0]?.full_name : (note.profiles as any)?.full_name) || "Profissional",
       text: note.content
     }));
 
