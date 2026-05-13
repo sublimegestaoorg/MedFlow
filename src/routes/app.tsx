@@ -10,6 +10,7 @@ import {
   Bell,
   Menu,
   Radio,
+  Stethoscope,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
