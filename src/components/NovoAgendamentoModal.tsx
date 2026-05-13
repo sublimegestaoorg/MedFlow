@@ -74,7 +74,7 @@ export function NovoAgendamentoModal({
         _professional_id: professionalId,
         _starts_at: startsAt,
         _duration_minutes: duration,
-        _ignore_id: null,
+        _ignore_id: undefined,
       })
       .then(({ data, error }) => {
         if (cancelled) return;
@@ -137,7 +137,7 @@ export function NovoAgendamentoModal({
       _professional_id: professionalId,
       _starts_at: appointmentDate,
       _duration_minutes: duration,
-      _ignore_id: null,
+      _ignore_id: undefined,
     });
     if (hasConflict) {
       setConflict(true);
