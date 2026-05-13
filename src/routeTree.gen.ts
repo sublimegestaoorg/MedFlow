@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +21,11 @@ import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes
 import { Route as AppAgendamentosRouteImport } from './routes/app/agendamentos'
 import { Route as AppPacientesIdRouteImport } from './routes/app/pacientes/$id'
 
+const RoadmapRoute = RoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/roadmap': typeof RoadmapRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/roadmap': typeof RoadmapRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/roadmap': typeof RoadmapRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
@@ -113,6 +122,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/login'
+    | '/roadmap'
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/roadmap'
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/login'
+    | '/roadmap'
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
@@ -149,10 +161,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  RoadmapRoute: typeof RoadmapRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/roadmap': {
+      id: '/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof RoadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -262,7 +282,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  RoadmapRoute: RoadmapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
