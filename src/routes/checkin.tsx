@@ -35,7 +35,7 @@ function CheckinPage() {
 
     const { data, error } = await supabase
       .from("appointments")
-      .select("id, appointment_date, status, duration_minutes, checked_in_at, patients(full_name), profiles!appointments_professional_id_fkey(full_name, specialty)")
+      .select("id, appointment_date, status, duration_minutes, checked_in_at, patients(full_name), profiles(full_name, specialty)")
       .eq("confirmation_code", clean)
       .maybeSingle();
 
