@@ -1,18 +1,20 @@
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
-import { 
-  Calendar, 
-  LayoutDashboard, 
-  Users, 
-  Wallet, 
-  Settings, 
-  LogOut, 
-  HeartPulse, 
-  Bell, 
-  Menu 
+import { createFileRoute, Outlet, useNavigate, useLocation } from "@tanstack/react-router";
+import {
+  Calendar,
+  LayoutDashboard,
+  Users,
+  Wallet,
+  Settings,
+  LogOut,
+  HeartPulse,
+  Bell,
+  Menu,
+  Radio,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { useClinicPresence } from "@/hooks/use-presence";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -24,6 +26,7 @@ const navItems = [
   { icon: HeartPulse, label: "Pacientes", href: "/app/pacientes" },
   { icon: Wallet, label: "Financeiro", href: "/app/financeiro" },
   { icon: Users, label: "Equipe", href: "/app/equipe" },
+  { icon: Radio, label: "Online agora", href: "/app/online", adminOnly: true },
 ];
 
 function AppLayout() {
