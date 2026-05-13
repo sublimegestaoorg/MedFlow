@@ -11,6 +11,8 @@ import {
   Menu,
   Radio,
   Stethoscope,
+  ListOrdered,
+  ClipboardCheck,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
