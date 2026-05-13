@@ -26,6 +26,8 @@ export const Route = createFileRoute("/app")({
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/app" },
   { icon: Calendar, label: "Agendamentos", href: "/app/agendamentos" },
+  { icon: ClipboardCheck, label: "Recepção", href: "/app/recepcao" },
+  { icon: ListOrdered, label: "Fila de espera", href: "/app/fila" },
   { icon: HeartPulse, label: "Pacientes", href: "/app/pacientes" },
   { icon: Stethoscope, label: "Procedimentos", href: "/app/procedimentos" },
   { icon: Wallet, label: "Financeiro", href: "/app/financeiro" },
