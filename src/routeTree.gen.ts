@@ -13,13 +13,16 @@ import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JuridicoRouteImport } from './routes/juridico'
 import { Route as GoToMarketRouteImport } from './routes/go-to-market'
+import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppRecepcaoRouteImport } from './routes/app/recepcao'
 import { Route as AppProcedimentosRouteImport } from './routes/app/procedimentos'
 import { Route as AppPacientesRouteImport } from './routes/app/pacientes'
 import { Route as AppOnlineRouteImport } from './routes/app/online'
 import { Route as AppFinanceiroRouteImport } from './routes/app/financeiro'
+import { Route as AppFilaRouteImport } from './routes/app/fila'
 import { Route as AppEquipeRouteImport } from './routes/app/equipe'
 import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes'
 import { Route as AppAgendamentosRouteImport } from './routes/app/agendamentos'
@@ -45,6 +48,11 @@ const GoToMarketRoute = GoToMarketRouteImport.update({
   path: '/go-to-market',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckinRoute = CheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -58,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRecepcaoRoute = AppRecepcaoRouteImport.update({
+  id: '/recepcao',
+  path: '/recepcao',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProcedimentosRoute = AppProcedimentosRouteImport.update({
@@ -78,6 +91,11 @@ const AppOnlineRoute = AppOnlineRouteImport.update({
 const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
   id: '/financeiro',
   path: '/financeiro',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFilaRoute = AppFilaRouteImport.update({
+  id: '/fila',
+  path: '/fila',
   getParentRoute: () => AppRoute,
 } as any)
 const AppEquipeRoute = AppEquipeRouteImport.update({
@@ -104,6 +122,7 @@ const AppPacientesIdRoute = AppPacientesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/checkin': typeof CheckinRoute
   '/go-to-market': typeof GoToMarketRoute
   '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
@@ -111,15 +130,18 @@ export interface FileRoutesByFullPath {
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
+  '/app/fila': typeof AppFilaRoute
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/procedimentos': typeof AppProcedimentosRoute
+  '/app/recepcao': typeof AppRecepcaoRoute
   '/app/': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
   '/go-to-market': typeof GoToMarketRoute
   '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
@@ -127,10 +149,12 @@ export interface FileRoutesByTo {
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
+  '/app/fila': typeof AppFilaRoute
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/procedimentos': typeof AppProcedimentosRoute
+  '/app/recepcao': typeof AppRecepcaoRoute
   '/app': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
 }
@@ -138,6 +162,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/checkin': typeof CheckinRoute
   '/go-to-market': typeof GoToMarketRoute
   '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
@@ -145,10 +170,12 @@ export interface FileRoutesById {
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
+  '/app/fila': typeof AppFilaRoute
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
   '/app/procedimentos': typeof AppProcedimentosRoute
+  '/app/recepcao': typeof AppRecepcaoRoute
   '/app/': typeof AppIndexRoute
   '/app/pacientes/$id': typeof AppPacientesIdRoute
 }
@@ -157,6 +184,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/checkin'
     | '/go-to-market'
     | '/juridico'
     | '/login'
@@ -164,15 +192,18 @@ export interface FileRouteTypes {
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
+    | '/app/fila'
     | '/app/financeiro'
     | '/app/online'
     | '/app/pacientes'
     | '/app/procedimentos'
+    | '/app/recepcao'
     | '/app/'
     | '/app/pacientes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/checkin'
     | '/go-to-market'
     | '/juridico'
     | '/login'
@@ -180,16 +211,19 @@ export interface FileRouteTypes {
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
+    | '/app/fila'
     | '/app/financeiro'
     | '/app/online'
     | '/app/pacientes'
     | '/app/procedimentos'
+    | '/app/recepcao'
     | '/app'
     | '/app/pacientes/$id'
   id:
     | '__root__'
     | '/'
     | '/app'
+    | '/checkin'
     | '/go-to-market'
     | '/juridico'
     | '/login'
@@ -197,10 +231,12 @@ export interface FileRouteTypes {
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
+    | '/app/fila'
     | '/app/financeiro'
     | '/app/online'
     | '/app/pacientes'
     | '/app/procedimentos'
+    | '/app/recepcao'
     | '/app/'
     | '/app/pacientes/$id'
   fileRoutesById: FileRoutesById
@@ -208,6 +244,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  CheckinRoute: typeof CheckinRoute
   GoToMarketRoute: typeof GoToMarketRoute
   JuridicoRoute: typeof JuridicoRoute
   LoginRoute: typeof LoginRoute
@@ -244,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GoToMarketRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkin': {
+      id: '/checkin'
+      path: '/checkin'
+      fullPath: '/checkin'
+      preLoaderRoute: typeof CheckinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -263,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/recepcao': {
+      id: '/app/recepcao'
+      path: '/recepcao'
+      fullPath: '/app/recepcao'
+      preLoaderRoute: typeof AppRecepcaoRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/procedimentos': {
@@ -291,6 +342,13 @@ declare module '@tanstack/react-router' {
       path: '/financeiro'
       fullPath: '/app/financeiro'
       preLoaderRoute: typeof AppFinanceiroRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/fila': {
+      id: '/app/fila'
+      path: '/fila'
+      fullPath: '/app/fila'
+      preLoaderRoute: typeof AppFilaRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/equipe': {
@@ -340,10 +398,12 @@ interface AppRouteChildren {
   AppAgendamentosRoute: typeof AppAgendamentosRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppEquipeRoute: typeof AppEquipeRoute
+  AppFilaRoute: typeof AppFilaRoute
   AppFinanceiroRoute: typeof AppFinanceiroRoute
   AppOnlineRoute: typeof AppOnlineRoute
   AppPacientesRoute: typeof AppPacientesRouteWithChildren
   AppProcedimentosRoute: typeof AppProcedimentosRoute
+  AppRecepcaoRoute: typeof AppRecepcaoRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
@@ -351,10 +411,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppAgendamentosRoute: AppAgendamentosRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppEquipeRoute: AppEquipeRoute,
+  AppFilaRoute: AppFilaRoute,
   AppFinanceiroRoute: AppFinanceiroRoute,
   AppOnlineRoute: AppOnlineRoute,
   AppPacientesRoute: AppPacientesRouteWithChildren,
   AppProcedimentosRoute: AppProcedimentosRoute,
+  AppRecepcaoRoute: AppRecepcaoRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -363,6 +425,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  CheckinRoute: CheckinRoute,
   GoToMarketRoute: GoToMarketRoute,
   JuridicoRoute: JuridicoRoute,
   LoginRoute: LoginRoute,
