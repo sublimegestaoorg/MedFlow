@@ -155,6 +155,7 @@ export type Database = {
           professional_id: string | null
           type: string | null
           updated_at: string
+          vitals: Json | null
         }
         Insert: {
           clinic_id?: string | null
@@ -165,6 +166,7 @@ export type Database = {
           professional_id?: string | null
           type?: string | null
           updated_at?: string
+          vitals?: Json | null
         }
         Update: {
           clinic_id?: string | null
@@ -175,6 +177,7 @@ export type Database = {
           professional_id?: string | null
           type?: string | null
           updated_at?: string
+          vitals?: Json | null
         }
         Relationships: [
           {
