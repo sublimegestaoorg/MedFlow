@@ -135,6 +135,19 @@ function AppLayout() {
           </button>
           
           <div className="flex items-center gap-4">
+            {isAdmin && (
+              <a
+                href="/app/online"
+                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-500 text-xs font-semibold hover:bg-emerald-500/15 transition-colors"
+                title="Usuários online agora"
+              >
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
+                  <span className="relative inline-flex rounded-full size-2 bg-emerald-500" />
+                </span>
+                {onlineUsers.length} online
+              </a>
+            )}
             <button className="relative p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
               <Bell className="size-5" />
               <span className="absolute top-1 right-1 size-2 bg-destructive rounded-full" />
@@ -142,11 +155,22 @@ function AppLayout() {
             <div className="h-8 w-px bg-border mx-2" />
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <div className="text-sm font-bold text-foreground">Dra. Geisa Lorena</div>
-                <div className="text-xs text-muted-foreground">Administrador</div>
+                <div className="text-sm font-bold text-foreground">
+                  {me?.full_name ?? "Carregando…"}
+                </div>
+                <div className="text-xs text-muted-foreground capitalize">
+                  {me?.role ?? "—"}
+                </div>
               </div>
               <div className="size-10 rounded-full bg-brand/20 border-2 border-brand-surface grid place-items-center font-bold text-brand">
-                GL
+                {me?.full_name
+                  ? me.full_name
+                      .split(" ")
+                      .filter(Boolean)
+                      .slice(0, 2)
+                      .map((p) => p[0]?.toUpperCase())
+                      .join("")
+                  : "—"}
               </div>
             </div>
           </div>
