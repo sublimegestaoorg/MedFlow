@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as JuridicoRouteImport } from './routes/juridico'
+import { Route as GoToMarketRouteImport } from './routes/go-to-market'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
@@ -29,6 +31,16 @@ const RoadmapRoute = RoadmapRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JuridicoRoute = JuridicoRouteImport.update({
+  id: '/juridico',
+  path: '/juridico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GoToMarketRoute = GoToMarketRouteImport.update({
+  id: '/go-to-market',
+  path: '/go-to-market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -80,6 +92,8 @@ const AppPacientesIdRoute = AppPacientesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/go-to-market': typeof GoToMarketRoute
+  '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
   '/roadmap': typeof RoadmapRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
@@ -92,6 +106,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/go-to-market': typeof GoToMarketRoute
+  '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
   '/roadmap': typeof RoadmapRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
@@ -106,6 +122,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/go-to-market': typeof GoToMarketRoute
+  '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
   '/roadmap': typeof RoadmapRoute
   '/app/agendamentos': typeof AppAgendamentosRoute
@@ -121,6 +139,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/go-to-market'
+    | '/juridico'
     | '/login'
     | '/roadmap'
     | '/app/agendamentos'
@@ -133,6 +153,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/go-to-market'
+    | '/juridico'
     | '/login'
     | '/roadmap'
     | '/app/agendamentos'
@@ -146,6 +168,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/go-to-market'
+    | '/juridico'
     | '/login'
     | '/roadmap'
     | '/app/agendamentos'
@@ -160,6 +184,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  GoToMarketRoute: typeof GoToMarketRoute
+  JuridicoRoute: typeof JuridicoRoute
   LoginRoute: typeof LoginRoute
   RoadmapRoute: typeof RoadmapRoute
 }
@@ -178,6 +204,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/juridico': {
+      id: '/juridico'
+      path: '/juridico'
+      fullPath: '/juridico'
+      preLoaderRoute: typeof JuridicoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/go-to-market': {
+      id: '/go-to-market'
+      path: '/go-to-market'
+      fullPath: '/go-to-market'
+      preLoaderRoute: typeof GoToMarketRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app': {
@@ -281,6 +321,8 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  GoToMarketRoute: GoToMarketRoute,
+  JuridicoRoute: JuridicoRoute,
   LoginRoute: LoginRoute,
   RoadmapRoute: RoadmapRoute,
 }
