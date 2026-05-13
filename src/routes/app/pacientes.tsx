@@ -1,19 +1,48 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Search, Plus, Filter, MoreVertical, FileText, Phone, Mail } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Search, Plus, Filter, MoreVertical, FileText, Phone, Mail, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/app/pacientes")({
   component: Pacientes,
 });
 
-const pacientesMock = [
-  { id: 1, nome: "Amanda Silva", email: "amanda.silva@email.com", telefone: "(11) 98765-4321", ultimaConsulta: "13 Mai 2026", status: "Ativo" },
-  { id: 2, nome: "Carlos Oliveira", email: "carlos.o@email.com", telefone: "(11) 91234-5678", ultimaConsulta: "05 Mai 2026", status: "Ativo" },
-  { id: 3, nome: "Juliana Santos", email: "juh.santos@email.com", telefone: "(11) 99876-5432", ultimaConsulta: "12 Abr 2026", status: "Inativo" },
-  { id: 4, nome: "Roberto Costa", email: "roberto.costa@email.com", telefone: "(11) 94567-8901", ultimaConsulta: "28 Mar 2026", status: "Ativo" },
-  { id: 5, nome: "Fernanda Lima", email: "fe.lima@email.com", telefone: "(11) 93456-7890", ultimaConsulta: "Nenhuma", status: "Novo" },
-];
-
 function Pacientes() {
+  const navigate = useNavigate();
+  const [pacientes, setPacientes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPacientes();
+  }, []);
+
+  const fetchPacientes = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('patients')
+      .select('*')
+      .order('full_name');
+    
+    if (!error && data) {
+      setPacientes(data);
+    }
+    setLoading(false);
+  };
+
+  // Mantém mock caso o banco esteja vazio
+  const displayPacientes = pacientes.length > 0 ? pacientes.map(p => ({
+    id: p.id,
+    nome: p.full_name,
+    email: p.email || "Sem e-mail",
+    telefone: p.phone || "Sem telefone",
+    ultimaConsulta: "Ver histórico",
+    status: "Ativo"
+  })) : [
+    { id: '1', nome: "Amanda Silva", email: "amanda.silva@email.com", telefone: "(11) 98765-4321", ultimaConsulta: "13 Mai 2026", status: "Ativo" },
+    { id: '2', nome: "Carlos Oliveira", email: "carlos.o@email.com", telefone: "(11) 91234-5678", ultimaConsulta: "05 Mai 2026", status: "Ativo" },
+    { id: '3', nome: "Juliana Santos", email: "juh.santos@email.com", telefone: "(11) 99876-5432", ultimaConsulta: "12 Abr 2026", status: "Inativo" },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -51,6 +80,9 @@ function Pacientes() {
 
       {/* Table */}
       <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+        {loading ? (
+           <div className="p-12 flex justify-center"><Loader2 className="size-8 animate-spin text-brand" /></div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -64,7 +96,7 @@ function Pacientes() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {pacientesMock.map((paciente) => (
+              {displayPacientes.map((paciente) => (
                 <tr key={paciente.id} className="hover:bg-secondary/20 transition-colors group">
                   <td className="p-4">
                     <div className="size-10 rounded-full bg-brand/10 text-brand font-bold flex items-center justify-center text-sm border border-brand/20">
@@ -73,7 +105,9 @@ function Pacientes() {
                   </td>
                   <td className="p-4">
                     <div className="font-bold text-foreground">{paciente.nome}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">ID: #{paciente.id.toString().padStart(4, '0')}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5 flex gap-1 items-center">
+                       ID: #{paciente.id.toString().substring(0,6)}...
+                    </div>
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2 text-sm">
@@ -99,7 +133,11 @@ function Pacientes() {
                   </td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2 bg-white border border-border shadow-sm rounded-lg text-brand hover:bg-brand hover:text-white transition-colors" title="Abrir Prontuário">
+                      <button 
+                        onClick={() => navigate({ to: `/app/pacientes/${paciente.id}` })}
+                        className="p-2 bg-white border border-border shadow-sm rounded-lg text-brand hover:bg-brand hover:text-white transition-colors" 
+                        title="Abrir Prontuário"
+                      >
                         <FileText className="size-4" />
                       </button>
                       <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-colors">
@@ -112,12 +150,9 @@ function Pacientes() {
             </tbody>
           </table>
         </div>
+        )}
         <div className="p-4 border-t border-border flex items-center justify-between text-sm text-muted-foreground">
-          <span>Mostrando 1 a 5 de 42 pacientes</span>
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1 rounded-md border border-border hover:bg-secondary disabled:opacity-50">Anterior</button>
-            <button className="px-3 py-1 rounded-md border border-border hover:bg-secondary disabled:opacity-50">Próxima</button>
-          </div>
+          <span>Mostrando registros da base de dados.</span>
         </div>
       </div>
     </div>

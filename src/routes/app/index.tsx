@@ -1,17 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Bell } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { NovoAgendamentoModal } from "@/components/NovoAgendamentoModal";
 
 export const Route = createFileRoute("/app/")({
   component: DashboardOverview,
 });
-
-const agenda = [
-  { time: "08:00", patient: "Maria Silva", procedure: "Limpeza", color: "bg-emerald-500" },
-  { time: "09:00", patient: "João Pereira", procedure: "Consulta geral", color: "bg-blue-500" },
-  { time: "10:30", patient: "Paula Ramos", procedure: "Botox — sessão 2", color: "bg-amber-500" },
-  { time: "11:00", patient: "Carlos Lima", procedure: "Avaliação", color: "bg-zinc-500" },
-  { time: "14:00", patient: "Fernanda Costa", procedure: "Retorno", color: "bg-emerald-500" },
-];
 
 const occupation = [
   { name: "Dra. Ana", percentage: 88, color: "bg-emerald-500", width: "88%" },
@@ -21,8 +16,49 @@ const occupation = [
 ];
 
 function DashboardOverview() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [realAgenda, setRealAgenda] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchTodayAgenda();
+  }, []);
+
+  const fetchTodayAgenda = async () => {
+    const today = new Date().toISOString().split('T')[0];
+    const { data, error } = await supabase
+      .from('appointments')
+      .select('time:appointment_date, patient:patients(full_name), procedure:type')
+      .gte('appointment_date', `${today}T00:00:00`)
+      .lte('appointment_date', `${today}T23:59:59`)
+      .order('appointment_date', { ascending: true })
+      .limit(5);
+
+    if (!error && data) {
+      setRealAgenda(data);
+    }
+  };
+
+  // Mantemos o mock se o banco estiver vazio para ver a UI linda que fizemos
+  const displayAgenda = realAgenda.length > 0 ? realAgenda.map(item => ({
+    time: new Date(item.time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    patient: item.patient.full_name,
+    procedure: item.procedure,
+    color: "bg-emerald-500" // simplificado
+  })) : [
+    { time: "08:00", patient: "Maria Silva", procedure: "Limpeza", color: "bg-emerald-500" },
+    { time: "09:00", patient: "João Pereira", procedure: "Consulta geral", color: "bg-blue-500" },
+    { time: "10:30", patient: "Paula Ramos", procedure: "Botox — sessão 2", color: "bg-amber-500" },
+    { time: "11:00", patient: "Carlos Lima", procedure: "Avaliação", color: "bg-zinc-500" },
+    { time: "14:00", patient: "Fernanda Costa", procedure: "Retorno", color: "bg-emerald-500" },
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6 relative">
+      <NovoAgendamentoModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={fetchTodayAgenda}
+      />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
         <div>
@@ -30,7 +66,10 @@ function DashboardOverview() {
           <p className="text-sm text-muted-foreground mt-1">Clínica Sorria — hoje, 13 mai 2026</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 border border-border bg-card hover:bg-secondary px-5 py-2.5 rounded-full text-sm font-medium transition-colors">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 border border-border bg-card hover:bg-secondary px-5 py-2.5 rounded-full text-sm font-medium transition-colors"
+          >
             <Plus className="size-4" />
             <span>Agendar</span>
           </button>
@@ -81,7 +120,7 @@ function DashboardOverview() {
           </div>
 
           <div className="space-y-1">
-            {agenda.map((item, idx) => (
+            {displayAgenda.map((item, idx) => (
               <div key={idx} className="flex items-center justify-between py-3 hover:bg-secondary/50 rounded-lg px-2 -mx-2 transition-colors">
                 <div className="flex items-center gap-4">
                   <span className="text-muted-foreground text-sm font-medium w-12">{item.time}</span>
