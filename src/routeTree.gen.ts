@@ -21,6 +21,7 @@ import { Route as AppProcedimentosRouteImport } from './routes/app/procedimentos
 import { Route as AppPacientesRouteImport } from './routes/app/pacientes'
 import { Route as AppOnlineRouteImport } from './routes/app/online'
 import { Route as AppFinanceiroRouteImport } from './routes/app/financeiro'
+import { Route as AppFilaRouteImport } from './routes/app/fila'
 import { Route as AppEquipeRouteImport } from './routes/app/equipe'
 import { Route as AppConfiguracoesRouteImport } from './routes/app/configuracoes'
 import { Route as AppAgendamentosRouteImport } from './routes/app/agendamentos'
@@ -86,6 +87,11 @@ const AppFinanceiroRoute = AppFinanceiroRouteImport.update({
   path: '/financeiro',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFilaRoute = AppFilaRouteImport.update({
+  id: '/fila',
+  path: '/fila',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppEquipeRoute = AppEquipeRouteImport.update({
   id: '/equipe',
   path: '/equipe',
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
+  '/app/fila': typeof AppFilaRoute
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
+  '/app/fila': typeof AppFilaRoute
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/app/agendamentos': typeof AppAgendamentosRoute
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/equipe': typeof AppEquipeRoute
+  '/app/fila': typeof AppFilaRoute
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/online': typeof AppOnlineRoute
   '/app/pacientes': typeof AppPacientesRouteWithChildren
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
+    | '/app/fila'
     | '/app/financeiro'
     | '/app/online'
     | '/app/pacientes'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
+    | '/app/fila'
     | '/app/financeiro'
     | '/app/online'
     | '/app/pacientes'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/app/agendamentos'
     | '/app/configuracoes'
     | '/app/equipe'
+    | '/app/fila'
     | '/app/financeiro'
     | '/app/online'
     | '/app/pacientes'
@@ -313,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFinanceiroRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/fila': {
+      id: '/app/fila'
+      path: '/fila'
+      fullPath: '/app/fila'
+      preLoaderRoute: typeof AppFilaRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/equipe': {
       id: '/app/equipe'
       path: '/equipe'
@@ -360,6 +379,7 @@ interface AppRouteChildren {
   AppAgendamentosRoute: typeof AppAgendamentosRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppEquipeRoute: typeof AppEquipeRoute
+  AppFilaRoute: typeof AppFilaRoute
   AppFinanceiroRoute: typeof AppFinanceiroRoute
   AppOnlineRoute: typeof AppOnlineRoute
   AppPacientesRoute: typeof AppPacientesRouteWithChildren
@@ -371,6 +391,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAgendamentosRoute: AppAgendamentosRoute,
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppEquipeRoute: AppEquipeRoute,
+  AppFilaRoute: AppFilaRoute,
   AppFinanceiroRoute: AppFinanceiroRoute,
   AppOnlineRoute: AppOnlineRoute,
   AppPacientesRoute: AppPacientesRouteWithChildren,
@@ -392,3 +413,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
