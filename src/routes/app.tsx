@@ -87,16 +87,25 @@ function AppLayout() {
         </div>
 
         <nav className="flex-1 py-6 px-3 space-y-1">
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-3 rounded-xl text-muted-foreground hover:text-brand hover:bg-brand/10 transition-colors"
-            >
-              <item.icon className="size-5 shrink-0" />
-              {isSidebarOpen && <span className="font-medium text-sm">{item.label}</span>}
-            </a>
-          ))}
+          {navItems
+            .filter((item) => !item.adminOnly || isAdmin)
+            .map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="flex items-center gap-3 px-3 py-3 rounded-xl text-muted-foreground hover:text-brand hover:bg-brand/10 transition-colors"
+              >
+                <item.icon className="size-5 shrink-0" />
+                {isSidebarOpen && (
+                  <span className="font-medium text-sm flex-1">{item.label}</span>
+                )}
+                {isSidebarOpen && item.href === "/app/online" && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
+                    {onlineUsers.length}
+                  </span>
+                )}
+              </a>
+            ))}
         </nav>
 
         <div className="p-3 border-t border-border">
