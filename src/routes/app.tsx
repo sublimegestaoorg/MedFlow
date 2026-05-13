@@ -31,14 +31,37 @@ const navItems = [
 
 function AppLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [me, setMe] = useState<{
+    id: string;
+    full_name: string;
+    role: string;
+    avatar_url: string | null;
+    clinic_id: string | null;
+  } | null>(null);
 
-  // For a real app, you would verify session here
-  // useEffect(() => {
-  //   supabase.auth.getSession().then(({ data }) => {
-  //     if (!data.session) navigate({ to: '/login' });
-  //   });
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id, full_name, role, avatar_url, clinic_id")
+        .eq("id", data.user.id)
+        .single();
+      if (profile) setMe(profile as typeof me);
+    })();
+  }, []);
+
+  const onlineUsers = useClinicPresence({
+    clinicId: me?.clinic_id ?? null,
+    me: me
+      ? { user_id: me.id, full_name: me.full_name, role: me.role, avatar_url: me.avatar_url }
+      : null,
+    currentPage: location.pathname,
+  });
+  const isAdmin = me?.role === "admin" || me?.role === "owner";
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
