@@ -24,6 +24,7 @@ const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/app" },
   { icon: Calendar, label: "Agendamentos", href: "/app/agendamentos" },
   { icon: HeartPulse, label: "Pacientes", href: "/app/pacientes" },
+  { icon: Stethoscope, label: "Procedimentos", href: "/app/procedimentos" },
   { icon: Wallet, label: "Financeiro", href: "/app/financeiro" },
   { icon: Users, label: "Equipe", href: "/app/equipe" },
   { icon: Radio, label: "Online agora", href: "/app/online", adminOnly: true },
