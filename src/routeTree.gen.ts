@@ -13,6 +13,7 @@ import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JuridicoRouteImport } from './routes/juridico'
 import { Route as GoToMarketRouteImport } from './routes/go-to-market'
+import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
@@ -43,6 +44,11 @@ const JuridicoRoute = JuridicoRouteImport.update({
 const GoToMarketRoute = GoToMarketRouteImport.update({
   id: '/go-to-market',
   path: '/go-to-market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckinRoute = CheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -104,6 +110,7 @@ const AppPacientesIdRoute = AppPacientesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/checkin': typeof CheckinRoute
   '/go-to-market': typeof GoToMarketRoute
   '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
   '/go-to-market': typeof GoToMarketRoute
   '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/checkin': typeof CheckinRoute
   '/go-to-market': typeof GoToMarketRoute
   '/juridico': typeof JuridicoRoute
   '/login': typeof LoginRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/checkin'
     | '/go-to-market'
     | '/juridico'
     | '/login'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/checkin'
     | '/go-to-market'
     | '/juridico'
     | '/login'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/checkin'
     | '/go-to-market'
     | '/juridico'
     | '/login'
@@ -208,6 +220,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  CheckinRoute: typeof CheckinRoute
   GoToMarketRoute: typeof GoToMarketRoute
   JuridicoRoute: typeof JuridicoRoute
   LoginRoute: typeof LoginRoute
@@ -242,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/go-to-market'
       fullPath: '/go-to-market'
       preLoaderRoute: typeof GoToMarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkin': {
+      id: '/checkin'
+      path: '/checkin'
+      fullPath: '/checkin'
+      preLoaderRoute: typeof CheckinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app': {
@@ -363,6 +383,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  CheckinRoute: CheckinRoute,
   GoToMarketRoute: GoToMarketRoute,
   JuridicoRoute: JuridicoRoute,
   LoginRoute: LoginRoute,
@@ -371,3 +392,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
