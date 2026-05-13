@@ -10,6 +10,7 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   const navigate = useNavigate();
+  const [companyCode, setCompanyCode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,13 +19,42 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    // 1. Loga o usuário padrão no Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      toast.error(error.message || "Erro ao fazer login. Verifique suas credenciais.");
+    if (authError || !authData.user) {
+      toast.error(authError?.message || "Erro ao fazer login. Verifique suas credenciais.");
+      setLoading(false);
+      return;
+    }
+
+    // 2. Busca o profile do usuário logado
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('clinic_id')
+      .eq('id', authData.user.id)
+      .single();
+
+    if (!profile?.clinic_id) {
+      await supabase.auth.signOut();
+      toast.error("Seu usuário não está vinculado a nenhuma clínica.");
+      setLoading(false);
+      return;
+    }
+
+    // 3. Busca a clínica e valida o código
+    const { data: clinic } = await supabase
+      .from('clinics')
+      .select('code')
+      .eq('id', profile.clinic_id)
+      .single();
+
+    if (clinic?.code !== companyCode.toLowerCase()) {
+      await supabase.auth.signOut();
+      toast.error("Código da empresa inválido para este usuário. Verifique se digitou corretamente.");
       setLoading(false);
       return;
     }
@@ -84,11 +114,23 @@ function Login() {
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold font-display mb-2">Bem-vindo de volta</h2>
-            <p className="text-muted-foreground text-sm">Insira suas credenciais para acessar a plataforma.</p>
+            <h2 className="text-2xl font-bold font-display mb-2">Acesso Restrito</h2>
+            <p className="text-muted-foreground text-sm">Insira as credenciais da sua empresa.</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-brand-dark ml-1">Código da Empresa</label>
+              <input
+                type="text"
+                value={companyCode}
+                onChange={(e) => setCompanyCode(e.target.value)}
+                placeholder="Ex: sublime"
+                className="w-full bg-white px-4 py-3.5 rounded-xl border border-border focus:border-brand focus:ring-2 focus:ring-brand/20 outline-none transition-all placeholder:text-muted-foreground/50 lowercase"
+                required
+              />
+            </div>
+
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-brand-dark ml-1">E-mail corporativo</label>
               <input

@@ -74,10 +74,10 @@ function AppLayout() {
         </nav>
 
         <div className="p-3 border-t border-border">
-          <button className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+          <a href="/app/configuracoes" className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             <Settings className="size-5 shrink-0" />
             {isSidebarOpen && <span className="font-medium text-sm">Configurações</span>}
-          </button>
+          </a>
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors mt-1"
