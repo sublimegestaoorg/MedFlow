@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar, Wallet, Users, HeartPulse, Check, Stethoscope, Smile, Sparkles } from "lucide-react";
-import dashboardPreview from "@/assets/dashboard-preview.jpg";
+import clinoraLogo from "@/assets/clinora-logo.png";
+import clinoraCapa from "@/assets/clinora-capa.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MedFlow — Gestão inteligente para clínicas e consultórios" },
-      { name: "description", content: "Plataforma completa para agendamentos, prontuários, financeiro e gestão de equipe em consultórios médicos, odontológicos e estéticos." },
-      { property: "og:title", content: "MedFlow — Gestão inteligente para clínicas" },
-      { property: "og:description", content: "Agendamentos, prontuários e financeiro em uma única plataforma." },
+      { title: "Clinora — Gestão que cuida de clínicas e consultórios" },
+      { name: "description", content: "Plataforma completa para dentistas, clínicas médicas, estéticas e consultórios de todas as especialidades. Agendamentos, prontuários, financeiro e gestão de equipe em um só lugar." },
+      { property: "og:title", content: "Clinora — Gestão que cuida" },
+      { property: "og:description", content: "Plataforma completa para dentistas, clínicas médicas, estéticas e consultórios de todas as especialidades." },
     ],
   }),
   component: Landing,
@@ -38,11 +39,12 @@ function Landing() {
     <div className="bg-background text-foreground min-h-screen">
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-8 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="size-8 bg-brand rounded-lg grid place-items-center">
-            <HeartPulse className="size-4 text-brand-foreground" />
+        <div className="flex items-center gap-2.5">
+          <img src={clinoraLogo} alt="Clinora" className="size-9 rounded-lg object-contain" />
+          <div className="leading-tight">
+            <span className="font-display font-bold text-xl block">Clinora</span>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">gestão que cuida</span>
           </div>
-          <span className="font-display font-bold text-xl">MedFlow</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <a href="#funcionalidades" className="hover:text-foreground transition-colors">Funcionalidades</a>
@@ -82,9 +84,9 @@ function Landing() {
           </div>
           <div className="relative">
             <img
-              src={dashboardPreview}
-              alt="Painel da plataforma MedFlow exibindo agenda e indicadores financeiros"
-              className="w-full aspect-[4/3] object-cover rounded-2xl border border-border shadow-2xl"
+              src={clinoraCapa}
+              alt="Clinora — plataforma de gestão para clínicas e consultórios"
+              className="w-full aspect-[3/2] object-cover rounded-2xl border border-border shadow-2xl"
               loading="eager"
             />
             <div className="absolute -bottom-6 -left-6 bg-card p-5 rounded-2xl shadow-xl border border-border hidden md:flex items-center gap-4">
@@ -217,10 +219,10 @@ function Landing() {
       <footer className="py-10 border-t border-border">
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="size-6 bg-brand rounded-md" />
-            <span className="font-display font-bold">MedFlow</span>
+            <img src={clinoraLogo} alt="Clinora" className="size-7 rounded-md object-contain" />
+            <span className="font-display font-bold">Clinora</span>
           </div>
-          <p className="text-muted-foreground text-sm">© 2026 MedFlow Tecnologias em Saúde.</p>
+          <p className="text-muted-foreground text-sm">© 2026 Clinora — gestão que cuida.</p>
           <div className="flex gap-6 text-muted-foreground text-sm">
             <a href="#" className="hover:text-brand transition-colors">Privacidade</a>
             <a href="#" className="hover:text-brand transition-colors">Termos</a>
