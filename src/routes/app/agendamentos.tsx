@@ -262,6 +262,15 @@ function AgendamentosPage() {
         ))}
       </div>
 
+      {showHeatmap && (
+        <HeatmapPanel
+          days={days}
+          hours={hours}
+          appointments={heatmapData}
+          loading={heatmapLoading}
+        />
+      )}
+
       {/* Body */}
       <div className="flex-1 overflow-auto bg-background/50">
         {view === "week"
