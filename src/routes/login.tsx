@@ -3,7 +3,6 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import clinoraLogo from "@/assets/clinora-logo.png";
-import clinoraCapa from "@/assets/clinora-capa.png";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
