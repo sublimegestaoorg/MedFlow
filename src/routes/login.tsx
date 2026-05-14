@@ -108,10 +108,8 @@ function Login() {
       <div className="flex-1 flex items-center justify-center p-6 relative z-10">
         <div className="w-full max-w-md bg-card/80 backdrop-blur-xl p-8 sm:p-10 rounded-3xl shadow-2xl border border-white/40">
           <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-             <div className="size-8 bg-brand rounded-lg grid place-items-center">
-              <HeartPulse className="size-4 text-brand-foreground" />
-            </div>
-            <span className="font-display font-bold text-xl">MedFlow</span>
+            <img src={clinoraLogo} alt="Clinora" className="size-9 rounded-lg object-contain" />
+            <span className="font-display font-bold text-xl">Clinora</span>
           </div>
 
           <div className="text-center mb-8">
