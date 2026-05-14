@@ -98,7 +98,14 @@ function AgendamentosPage() {
   const [heatmapData, setHeatmapData] = useState<Appointment[]>([]);
   const [heatmapLoading, setHeatmapLoading] = useState(false);
 
-  // Always load full week's data for the heatmap based on current week
+  const weekStart = useMemo(() => startOfWeek(date), [date]);
+  const days = useMemo(() => Array.from({ length: 5 }, (_, i) => addDays(weekStart, i)), [weekStart]);
+  const hours = useMemo(() => Array.from({ length: HOUR_END - HOUR_START }, (_, i) => HOUR_START + i), []);
+
+  useEffect(() => { fetchProfessionals(); }, []);
+  useEffect(() => { fetchAppointments(); }, [view, date, selectedProf]);
+
+  // Carrega dados da semana inteira para o mapa de calor
   useEffect(() => {
     if (!showHeatmap) return;
     (async () => {
@@ -115,13 +122,6 @@ function AgendamentosPage() {
       setHeatmapLoading(false);
     })();
   }, [showHeatmap, weekStart, selectedProf]);
-
-  const weekStart = useMemo(() => startOfWeek(date), [date]);
-  const days = useMemo(() => Array.from({ length: 5 }, (_, i) => addDays(weekStart, i)), [weekStart]);
-  const hours = useMemo(() => Array.from({ length: HOUR_END - HOUR_START }, (_, i) => HOUR_START + i), []);
-
-  useEffect(() => { fetchProfessionals(); }, []);
-  useEffect(() => { fetchAppointments(); }, [view, date, selectedProf]);
 
   const fetchProfessionals = async () => {
     const { data } = await supabase
