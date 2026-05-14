@@ -222,6 +222,14 @@ function AgendamentosPage() {
               className={`px-4 py-1.5 text-sm font-medium rounded-md ${view === "day" ? "bg-card border border-border/50 shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
             >Dia</button>
           </div>
+          <button
+            onClick={() => setShowHeatmap((v) => !v)}
+            className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium border rounded-lg transition-colors ${showHeatmap ? "bg-orange-500/15 border-orange-500/40 text-orange-300" : "border-border text-muted-foreground hover:bg-secondary"}`}
+            title="Mapa de calor de ocupação da semana"
+          >
+            <Flame className="size-4" />
+            <span className="hidden sm:inline">Mapa de calor</span>
+          </button>
         </div>
 
         <div className="flex items-center gap-3">
