@@ -576,8 +576,8 @@ function HeatmapPanel({
               </div>
             ))}
             {hours.map((h) => (
-              <>
-                <div key={`hl-${h}`} className="text-[11px] text-muted-foreground text-right pr-2 py-1.5 font-mono">
+              <Fragment key={`row-${h}`}>
+                <div className="text-[11px] text-muted-foreground text-right pr-2 py-1.5 font-mono">
                   {String(h).padStart(2, "0")}:00
                 </div>
                 {days.map((d) => {
@@ -585,7 +585,7 @@ function HeatmapPanel({
                   const c = counts.get(key) || 0;
                   return (
                     <div
-                      key={`${key}`}
+                      key={key}
                       className={`m-0.5 rounded-md h-7 grid place-items-center text-[11px] font-bold transition-colors ${cellColor(c)}`}
                       title={`${DAY_NAMES[d.getDay()]} ${d.getDate()} — ${String(h).padStart(2,"0")}:00 • ${c} agendamento${c === 1 ? "" : "s"}`}
                     >
@@ -593,7 +593,7 @@ function HeatmapPanel({
                     </div>
                   );
                 })}
-              </>
+              </Fragment>
             ))}
           </div>
         </div>
