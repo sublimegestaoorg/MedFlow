@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { HeartPulse, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import clinoraLogo from "@/assets/clinora-logo.png";
+import clinoraCapa from "@/assets/clinora-capa.png";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
@@ -73,12 +75,11 @@ function Login() {
       {/* Left Column - Branding */}
       <div className="hidden lg:flex flex-1 flex-col justify-center px-24 relative z-10">
         <div className="flex items-center gap-3 mb-12">
-          <div className="size-12 bg-brand rounded-xl grid place-items-center shadow-lg">
-            <HeartPulse className="size-6 text-brand-foreground" />
+          <img src={clinoraLogo} alt="Clinora" className="size-14 rounded-2xl shadow-lg object-contain bg-white/60 backdrop-blur p-1" />
+          <div className="leading-tight">
+            <span className="font-display font-bold text-3xl tracking-tight text-brand-dark block">Clinora</span>
+            <span className="text-xs uppercase tracking-[0.22em] text-brand">gestão que cuida</span>
           </div>
-          <span className="font-display font-bold text-3xl tracking-tight text-brand-dark">
-            MedFlow
-          </span>
         </div>
         
         <h1 className="text-5xl font-bold font-display leading-[1.1] mb-6 text-brand-dark">
