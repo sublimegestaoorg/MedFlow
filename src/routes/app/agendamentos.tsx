@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, Plus, Loader2, Search, Calendar as CalendarIcon, Ban } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Loader2, Search, Calendar as CalendarIcon, Ban, Flame } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { NovoAgendamentoModal, type AgendamentoPrefill } from "@/components/NovoAgendamentoModal";
