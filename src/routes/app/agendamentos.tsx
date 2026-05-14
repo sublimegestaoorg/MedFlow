@@ -94,6 +94,27 @@ function AgendamentosPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
+  const [showHeatmap, setShowHeatmap] = useState(false);
+  const [heatmapData, setHeatmapData] = useState<Appointment[]>([]);
+  const [heatmapLoading, setHeatmapLoading] = useState(false);
+
+  // Always load full week's data for the heatmap based on current week
+  useEffect(() => {
+    if (!showHeatmap) return;
+    (async () => {
+      setHeatmapLoading(true);
+      const from = weekStart;
+      const to = addDays(weekStart, 5);
+      let q = supabase.from("appointments")
+        .select("id, appointment_date, duration_minutes, status, type, professional_id, patients(id, full_name), profiles(full_name, specialty)")
+        .gte("appointment_date", from.toISOString())
+        .lt("appointment_date", to.toISOString());
+      if (selectedProf !== "all") q = q.eq("professional_id", selectedProf);
+      const { data } = await q;
+      setHeatmapData((data as any) || []);
+      setHeatmapLoading(false);
+    })();
+  }, [showHeatmap, weekStart, selectedProf]);
 
   const weekStart = useMemo(() => startOfWeek(date), [date]);
   const days = useMemo(() => Array.from({ length: 5 }, (_, i) => addDays(weekStart, i)), [weekStart]);
