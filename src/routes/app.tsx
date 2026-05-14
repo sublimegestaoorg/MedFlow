@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { useClinicPresence } from "@/hooks/use-presence";
+import clinoraLogo from "@/assets/clinora-logo.png";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
