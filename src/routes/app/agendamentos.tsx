@@ -492,3 +492,135 @@ function DayProfessionalsView({
     </div>
   );
 }
+
+/* ------------- Heatmap de ocupação ------------- */
+function HeatmapPanel({
+  days, hours, appointments, loading,
+}: {
+  days: Date[]; hours: number[]; appointments: Appointment[]; loading: boolean;
+}) {
+  // Conta agendamentos ativos por (dia, hora)
+  const counts = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const a of appointments) {
+      if (a.status === "cancelled" || a.status === "no_show") continue;
+      const d = new Date(a.appointment_date);
+      const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getHours()}`;
+      map.set(key, (map.get(key) || 0) + 1);
+    }
+    return map;
+  }, [appointments]);
+
+  const max = useMemo(() => {
+    let m = 0;
+    for (const v of counts.values()) if (v > m) m = v;
+    return m;
+  }, [counts]);
+
+  const cellColor = (count: number) => {
+    if (count === 0) return "bg-muted/30 text-muted-foreground/50";
+    const intensity = max > 0 ? count / max : 0;
+    if (intensity >= 0.85) return "bg-rose-500/80 text-white";
+    if (intensity >= 0.65) return "bg-orange-500/75 text-white";
+    if (intensity >= 0.4) return "bg-amber-500/70 text-amber-50";
+    if (intensity >= 0.2) return "bg-emerald-500/55 text-emerald-50";
+    return "bg-emerald-500/30 text-emerald-100";
+  };
+
+  const totalSlots = days.length * hours.length;
+  const occupiedSlots = Array.from(counts.values()).filter((v) => v > 0).length;
+  const totalAppts = Array.from(counts.values()).reduce((s, v) => s + v, 0);
+  const occupancyPct = totalSlots > 0 ? Math.round((occupiedSlots / totalSlots) * 100) : 0;
+
+  // Pico de demanda
+  let peakKey = "";
+  let peakCount = 0;
+  for (const [k, v] of counts.entries()) {
+    if (v > peakCount) { peakCount = v; peakKey = k; }
+  }
+  const peakLabel = peakKey
+    ? (() => {
+        const [y, m, d, h] = peakKey.split("-").map(Number);
+        const dt = new Date(y, m, d);
+        return `${DAY_NAMES[(dt.getDay())]} ${String(h).padStart(2, "0")}:00`;
+      })()
+    : "—";
+
+  return (
+    <div className="border-b border-border bg-gradient-to-br from-orange-500/5 via-background to-rose-500/5 px-6 py-5">
+      <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
+        <div>
+          <h3 className="text-sm font-bold font-display flex items-center gap-2">
+            <Flame className="size-4 text-orange-400" />
+            Mapa de calor — ocupação da semana
+          </h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            Intensidade por dia e hora. Verde = livre, vermelho = pico de demanda.
+          </p>
+        </div>
+        <div className="flex items-center gap-4 text-xs">
+          <Stat label="Ocupação" value={`${occupancyPct}%`} />
+          <Stat label="Atendimentos" value={String(totalAppts)} />
+          <Stat label="Pico" value={peakLabel} />
+          {loading && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
+        </div>
+      </div>
+
+      <div className="overflow-x-auto">
+        <div className="inline-block min-w-full">
+          <div className="grid" style={{ gridTemplateColumns: `60px repeat(${days.length}, minmax(70px, 1fr))` }}>
+            <div />
+            {days.map((d) => (
+              <div key={d.toISOString()} className="text-center text-[11px] font-bold text-muted-foreground pb-2">
+                {DAY_NAMES[d.getDay()]} <span className="text-foreground/80">{d.getDate()}</span>
+              </div>
+            ))}
+            {hours.map((h) => (
+              <>
+                <div key={`hl-${h}`} className="text-[11px] text-muted-foreground text-right pr-2 py-1.5 font-mono">
+                  {String(h).padStart(2, "0")}:00
+                </div>
+                {days.map((d) => {
+                  const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${h}`;
+                  const c = counts.get(key) || 0;
+                  return (
+                    <div
+                      key={`${key}`}
+                      className={`m-0.5 rounded-md h-7 grid place-items-center text-[11px] font-bold transition-colors ${cellColor(c)}`}
+                      title={`${DAY_NAMES[d.getDay()]} ${d.getDate()} — ${String(h).padStart(2,"0")}:00 • ${c} agendamento${c === 1 ? "" : "s"}`}
+                    >
+                      {c > 0 ? c : ""}
+                    </div>
+                  );
+                })}
+              </>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Legenda */}
+      <div className="flex items-center gap-3 mt-4 text-[11px] text-muted-foreground">
+        <span>Menor demanda</span>
+        <div className="flex items-center gap-1">
+          <span className="size-4 rounded bg-muted/30 border border-border" />
+          <span className="size-4 rounded bg-emerald-500/30" />
+          <span className="size-4 rounded bg-emerald-500/55" />
+          <span className="size-4 rounded bg-amber-500/70" />
+          <span className="size-4 rounded bg-orange-500/75" />
+          <span className="size-4 rounded bg-rose-500/80" />
+        </div>
+        <span>Maior demanda</span>
+      </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col items-end">
+      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
+      <span className="text-sm font-bold font-display text-foreground">{value}</span>
+    </div>
+  );
+}
