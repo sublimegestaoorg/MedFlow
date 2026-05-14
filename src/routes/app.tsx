@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { useClinicPresence } from "@/hooks/use-presence";
+import clinoraLogo from "@/assets/clinora-logo.png";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -85,10 +86,13 @@ function AppLayout() {
       >
         <div className="h-20 flex items-center justify-between px-6 border-b border-border">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="size-8 bg-brand rounded-lg grid place-items-center shrink-0">
-              <HeartPulse className="size-4 text-brand-foreground" />
-            </div>
-            {isSidebarOpen && <span className="font-display font-bold text-xl">MedFlow</span>}
+            <img src={clinoraLogo} alt="Clinora" className="size-9 rounded-lg shrink-0 object-contain" />
+            {isSidebarOpen && (
+              <div className="leading-tight">
+                <div className="font-display font-bold text-xl tracking-tight">Clinora</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">gestão que cuida</div>
+              </div>
+            )}
           </div>
         </div>
 
